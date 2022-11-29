@@ -1,5 +1,10 @@
 <template>
-  <BasePage title="Tab 1">
+  <BasePage hide-header>
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab-button>
+        <ion-icon :icon="add" @click="onAdd()" />
+      </ion-fab-button>
+    </ion-fab>
     <div class="items">
       <ItemCard v-for="(item, index) in items" :key="index" :item="item" />
     </div>
@@ -10,6 +15,9 @@
 import ItemCard from '@/components/ItemCard.vue';
 import BasePage from './BasePage.vue';
 import { WishlistItem } from '@/types';
+import { IonFab, IonFabButton, IonIcon, modalController } from '@ionic/vue';
+import { add } from 'ionicons/icons';
+import WishlistModal from '@/modals/WishlistModal.vue';
 
 const items: WishlistItem[] = [
   {
@@ -47,6 +55,14 @@ const items: WishlistItem[] = [
     rating: 5
   }
 ];
+
+const onAdd = async () => {
+  console.dir("--- apples")
+  const modal = await modalController.create({ component: WishlistModal });
+  await modal.present();
+  const resp = await modal.onDidDismiss();
+  console.dir(resp);
+};
 </script>
 
 <style scoped>
