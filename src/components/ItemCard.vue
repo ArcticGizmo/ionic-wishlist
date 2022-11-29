@@ -1,6 +1,6 @@
 <template>
   <div class="item-card">
-    <img v-if="item.src" :src="item.src" />
+    <BImage v-if="item.src" :src="item.src" />
     <div v-else class="name">{{ item.name }}</div>
   </div>
 </template>
@@ -8,11 +8,21 @@
 <script setup lang="ts">
 import { WishlistItem } from '@/types';
 import { PropType } from 'vue';
+import BImage from './BImage.vue';
 
 defineProps({
   item: { type: Object as PropType<WishlistItem>, required: true }
 });
 </script>
+
+<style>
+.item-card .b-image {
+  object-fit: cover;
+  margin: 0.1rem;
+  height: 100%;
+  width: auto;
+}
+</style>
 
 <style scoped>
 .item-card {
@@ -27,10 +37,5 @@ defineProps({
 .name {
   text-align: center;
   width: 100%;
-}
-
-img {
-  object-fit: cover;
-  margin: 0.1rem;
 }
 </style>

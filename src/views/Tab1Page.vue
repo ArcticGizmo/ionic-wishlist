@@ -1,25 +1,24 @@
 <template>
   <BasePage hide-header>
-    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-      <ion-fab-button>
-        <ion-icon :icon="add" @click="onAdd()" />
-      </ion-fab-button>
-    </ion-fab>
+    <ion-fab-button class="add-item">
+      <ion-icon :icon="add" @click="onAdd()" />
+    </ion-fab-button>
     <div class="items">
-      <ItemCard v-for="(item, index) in items" :key="index" :item="item" />
+      <ItemCard v-for="(item, index) in items" :key="index" :item="item" @click="onEdit(item, index)" />
     </div>
   </BasePage>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import ItemCard from '@/components/ItemCard.vue';
 import BasePage from './BasePage.vue';
 import { WishlistItem } from '@/types';
-import { IonFab, IonFabButton, IonIcon, modalController } from '@ionic/vue';
+import { IonFabButton, IonIcon, modalController } from '@ionic/vue';
 import { add } from 'ionicons/icons';
 import WishlistModal from '@/modals/WishlistModal.vue';
 
-const items: WishlistItem[] = [
+const items = ref<WishlistItem[]>([
   {
     name: 'Watch A something something',
     src: 'https://www.fossil.com/on/demandware.static/-/Library-Sites-FossilSharedLibrary/default/dwa0f05dff/2022/FA22/set_0801_global/dgp_watches/0801_DGP_Mens-Stainless.jpg',
@@ -54,14 +53,24 @@ const items: WishlistItem[] = [
     price: 450,
     rating: 5
   }
-];
+]);
 
 const onAdd = async () => {
-  console.dir("--- apples")
   const modal = await modalController.create({ component: WishlistModal });
   await modal.present();
-  const resp = await modal.onDidDismiss();
-  console.dir(resp);
+  const resp = await modal.onDidDismiss<WishlistItem>();
+  if (resp?.data) {
+    items.value.push(resp.data);
+  }
+};
+
+const onEdit = async (item: WishlistItem, index: number) => {
+  const modal = await modalController.create({ component: WishlistModal, componentProps: { item } });
+  await modal.present();
+  const resp = await modal.onDidDismiss<WishlistItem>();
+  if (resp?.data) {
+    items.value[index] = resp.data;
+  }
 };
 </script>
 
@@ -72,5 +81,12 @@ const onAdd = async () => {
   grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
   grid-gap: 0.25rem;
   justify-content: space-around;
+}
+
+.add-item {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1000;
 }
 </style>

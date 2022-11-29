@@ -1,9 +1,9 @@
 <template>
   <BasePage hide-header>
+    <PictureField v-model="src" class="picture-field" name="picture" />
     <TextField v-model="name" name="name" />
     <TextField v-model="brand" name="brand" />
-    <!-- replace with image uploader -->
-    <!-- <TextField v-model="price" name="price" /> -->
+    <TextField v-model="url" name="url" />
     <div class="actions">
       <ion-button @click="onClose()">Cancel</ion-button>
       <ion-button :disabled="!canSubmit" @click="onSubmit()">Submit</ion-button>
@@ -17,14 +17,17 @@ import { WishlistItem } from '@/types';
 import BasePage from '@/views/BasePage.vue';
 import { modalController, IonButton } from '@ionic/vue';
 import TextField from '@/components/TextField.vue';
+import PictureField from '@/components/PictureField.vue';
 
 const props = defineProps({
   item: { type: Object as PropType<WishlistItem> }
 });
 
 const name = ref(props.item?.name || '');
-const brand = ref(props.item?.brand || '');
+const brand = ref(props.item?.brand);
 const src = ref(props.item?.src);
+const url = ref(props.item?.url);
+
 const price = ref(props.item?.price);
 
 const canSubmit = computed(() => name.value);
@@ -40,3 +43,15 @@ const onSubmit = () => {
   });
 };
 </script>
+
+<style scoped>
+.actions {
+  display: flex;
+  padding-bottom: 5rem;
+}
+
+.actions > * {
+  width: 100%;
+  height: 3rem;
+}
+</style>
