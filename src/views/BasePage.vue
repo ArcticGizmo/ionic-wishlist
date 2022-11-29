@@ -27,10 +27,6 @@ ion-title {
 }
 
 .page-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   height: 100%;
   padding: 2rem;
 }
