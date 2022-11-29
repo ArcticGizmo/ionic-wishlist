@@ -10,50 +10,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import ItemCard from '@/components/ItemCard.vue';
 import BasePage from './BasePage.vue';
 import { WishlistItem } from '@/types';
 import { IonFabButton, IonIcon, modalController } from '@ionic/vue';
 import { add } from 'ionicons/icons';
 import WishlistModal from '@/modals/WishlistModal.vue';
+import { Preferences } from '@capacitor/preferences';
 
-const items = ref<WishlistItem[]>([
-  {
-    name: 'Watch A something something',
-    src: 'https://www.fossil.com/on/demandware.static/-/Library-Sites-FossilSharedLibrary/default/dwa0f05dff/2022/FA22/set_0801_global/dgp_watches/0801_DGP_Mens-Stainless.jpg',
-    brand: 'fossil',
-    price: 450,
-    rating: 5
-  },
-  {
-    name: 'Watch A',
-    src: 'https://fossil.scene7.com/is/image/FossilPartners/LE1156_main?$sfcc_fos_hi-res$',
-    brand: 'fossil',
-    price: 450,
-    rating: 5
-  },
-  {
-    name: 'Watch A',
-    src: 'https://myer-media.com.au/wcsstore/MyerCatalogAssetStore/images/10/105/1511/402/1/921152080/921152080_1_360x464.webp',
-    brand: 'fossil',
-    price: 450,
-    rating: 5
-  },
-  {
-    name: 'Watch A',
-    src: 'https://www.fossil.com/on/demandware.static/-/Library-Sites-FossilSharedLibrary/default/dwa0f05dff/2022/FA22/set_0801_global/dgp_watches/0801_DGP_Mens-Stainless.jpg',
-    brand: 'fossil',
-    price: 450,
-    rating: 5
-  },
-  {
-    name: 'Watch A',
-    brand: 'fossil',
-    price: 450,
-    rating: 5
+const KEY = 'MY_ITEMS';
+
+const items = ref<WishlistItem[]>([]);
+
+onMounted(() => {
+  loadItems();
+});
+
+const saveItems = async () => {
+  await Preferences.set({ key: KEY, value: JSON.stringify(items.value) });
+};
+
+const loadItems = async () => {
+  const data = await Preferences.get({ key: KEY });
+  if (data.value) {
+    items.value = JSON.parse(data.value);
   }
-]);
+};
 
 const onAdd = async () => {
   const modal = await modalController.create({ component: WishlistModal });
@@ -61,15 +44,24 @@ const onAdd = async () => {
   const resp = await modal.onDidDismiss<WishlistItem>();
   if (resp?.data) {
     items.value.push(resp.data);
+    saveItems();
   }
 };
 
 const onEdit = async (item: WishlistItem, index: number) => {
-  const modal = await modalController.create({ component: WishlistModal, componentProps: { item } });
+  const modal = await modalController.create({ component: WishlistModal, componentProps: { item, canDelete: true } });
   await modal.present();
   const resp = await modal.onDidDismiss<WishlistItem>();
+
+  if (resp.role === 'destruction') {
+    items.value.splice(index, 1);
+    saveItems();
+    return;
+  }
+
   if (resp?.data) {
     items.value[index] = resp.data;
+    saveItems();
   }
 };
 </script>

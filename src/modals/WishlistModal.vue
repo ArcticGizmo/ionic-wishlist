@@ -7,6 +7,7 @@
     <div class="actions">
       <ion-button @click="onClose()">Cancel</ion-button>
       <ion-button :disabled="!canSubmit" @click="onSubmit()">Submit</ion-button>
+      <ion-button v-if="canDelete" @click="onDelete()">Delete</ion-button>
     </div>
   </BasePage>
 </template>
@@ -20,7 +21,8 @@ import TextField from '@/components/TextField.vue';
 import PictureField from '@/components/PictureField.vue';
 
 const props = defineProps({
-  item: { type: Object as PropType<WishlistItem> }
+  item: { type: Object as PropType<WishlistItem> },
+  canDelete: { type: Boolean }
 });
 
 const name = ref(props.item?.name || '');
@@ -41,6 +43,9 @@ const onSubmit = () => {
     src: src.value,
     price: price.value
   });
+};
+const onDelete = () => {
+  modalController.dismiss(undefined, 'destruction');
 };
 </script>
 
