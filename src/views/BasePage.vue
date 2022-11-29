@@ -1,0 +1,37 @@
+<template>
+  <ion-page>
+    <ion-header v-if="!hideHeader">
+      <ion-toolbar>
+        <ion-title>{{ title }}</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <div class="page-content">
+        <slot></slot>
+      </div>
+    </ion-content>
+  </ion-page>
+</template>
+
+<script setup lang="ts">
+import { IonPage, IonHeader, IonTitle, IonToolbar, IonContent } from '@ionic/vue';
+
+defineProps({
+  title: String,
+  hideHeader: { type: Boolean, default: false }
+});
+</script>
+<style scoped>
+ion-title {
+  text-align: center;
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 2rem;
+}
+</style>

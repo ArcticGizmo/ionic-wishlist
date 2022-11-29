@@ -1,0 +1,7 @@
+{
+  "name": "ionic-wishlist",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
