@@ -17,12 +17,11 @@
 
 <script setup lang="ts">
 import { IonIcon, IonLabel, IonButton, modalController } from '@ionic/vue';
-import { Camera } from '@capacitor/camera';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import BImage from './BImage.vue';
 
 import { imageOutline, closeCircleOutline } from 'ionicons/icons';
 
-import { webPathToDataUrl } from '@/code/image';
 import ImageViewerModal from '@/modals/ImageViewerModal.vue';
 import { computed } from 'vue';
 
@@ -54,18 +53,14 @@ const onViewImage = async () => {
 };
 
 const onOpenGallery = async () => {
-  const resp = await Camera.pickImages({
+  const resp = await Camera.getPhoto({
     quality: 90,
-    limit: 1,
-    height: 100,
-    width: 100
+    allowEditing: false,
+    resultType: CameraResultType.DataUrl,
+    source: CameraSource.Photos
   });
-  const photo = resp.photos[0];
-  if (!photo) {
-    return;
-  }
-  const dataUrl = await webPathToDataUrl(photo.webPath);
-  updateImage(dataUrl);
+
+  updateImage(resp.dataUrl);
 };
 
 const onClearImage = (e: Event) => {
