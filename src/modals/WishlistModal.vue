@@ -3,7 +3,8 @@
     <PictureField v-model="src" class="picture-field" name="picture" />
     <TextField v-model="name" name="name" />
     <TextField v-model="brand" name="brand" />
-    <TextField v-model="url" name="url" />
+    <TextField v-model="url" name="Website" />
+    <NumberField v-model="rating" name="rating" />
     <div class="actions">
       <ion-button @click="onClose()">Cancel</ion-button>
       <ion-button :disabled="!canSubmit" @click="onSubmit()">{{ item ? 'Update' : 'Create' }}</ion-button>
@@ -18,6 +19,7 @@ import { WishlistItem } from '@/types';
 import BasePage from '@/views/BasePage.vue';
 import { modalController, IonButton } from '@ionic/vue';
 import TextField from '@/components/TextField.vue';
+import NumberField from '@/components/NumberField.vue';
 import PictureField from '@/components/PictureField.vue';
 
 const props = defineProps({
@@ -29,6 +31,7 @@ const name = ref(props.item?.name || '');
 const brand = ref(props.item?.brand);
 const src = ref(props.item?.src);
 const url = ref(props.item?.url);
+const rating = ref(props.item?.rating || 0);
 
 const price = ref(props.item?.price);
 
@@ -41,7 +44,8 @@ const onSubmit = () => {
     name: name.value,
     brand: brand.value,
     src: src.value,
-    price: price.value
+    price: price.value,
+    rating: rating.value
   });
 };
 const onDelete = () => {

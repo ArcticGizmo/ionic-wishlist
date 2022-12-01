@@ -1,31 +1,61 @@
 <template>
   <BasePage hide-header>
+    <ion-fab-button class="filter">
+      <ion-icon :icon="funnel" @click="onFilter()" />
+    </ion-fab-button>
     <ion-fab-button class="add-item">
       <ion-icon :icon="add" @click="onAdd()" />
     </ion-fab-button>
     <div class="items">
-      <ItemCard v-for="(item, index) in items" :key="index" :item="item" @click="onEdit(item, index)" />
+      <ItemCard v-for="(item, index) in sortedItems" :key="index" :item="item" @click="onEdit(item, index)" />
     </div>
   </BasePage>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import ItemCard from '@/components/ItemCard.vue';
 import BasePage from './BasePage.vue';
 import { WishlistItem } from '@/types';
 import { IonFabButton, IonIcon, modalController } from '@ionic/vue';
-import { add } from 'ionicons/icons';
+import { add, funnel } from 'ionicons/icons';
 import WishlistModal from '@/modals/WishlistModal.vue';
 import { Preferences } from '@capacitor/preferences';
+
+enum SortType {
+  'number',
+  'string'
+}
 
 const KEY = 'MY_ITEMS';
 
 const items = ref<WishlistItem[]>([]);
 
+const sortBy = ref('rating');
+const sortAsc = ref(true);
+const sortType = ref<SortType>(SortType.number);
+
+const sortedItems = computed(() => {
+  const arr = items.value.slice();
+  const key = sortBy.value;
+  const asc = sortAsc.value;
+  if (sortType.value === SortType.number) {
+    if (asc) {
+      return arr.sort((a, b) => (a[key] || 0) - (b[key] || 0));
+    }
+    return arr.sort((b, a) => (a[key] || 0) - (b[key] || 0));
+  }
+
+  return arr.sort((a, b) => a[key].localeCompare(b[key]));
+});
+
 onMounted(() => {
   loadItems();
 });
+
+const onFilter = () => {
+  sortAsc.value = !sortAsc.value;
+};
 
 const saveItems = async () => {
   await Preferences.set({ key: KEY, value: JSON.stringify(items.value) });
@@ -79,6 +109,13 @@ const onEdit = async (item: WishlistItem, index: number) => {
   position: fixed;
   right: 1rem;
   bottom: 1rem;
+  z-index: 1000;
+}
+
+.filter {
+  position: fixed;
+  right: 1rem;
+  top: 1rem;
   z-index: 1000;
 }
 </style>

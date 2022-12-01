@@ -2,6 +2,7 @@
   <div class="item-card">
     <BImage v-if="item.src" :src="item.src" />
     <div v-else class="name">{{ item.name }}</div>
+    <div class="rating">{{ item.rating || '--' }}</div>
   </div>
 </template>
 
@@ -37,5 +38,11 @@ defineProps({
 .name {
   text-align: center;
   width: 100%;
+}
+
+.rating {
+  position: absolute;
+  top: 0.25rem;
+  left: 0.25rem;
 }
 </style>

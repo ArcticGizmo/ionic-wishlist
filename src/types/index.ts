@@ -7,4 +7,5 @@ export interface WishlistItem {
   src?: string;
   price?: number;
   rating?: number;
+  [key: string]: any;
 }
