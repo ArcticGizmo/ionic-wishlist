@@ -6,7 +6,7 @@
     <TextField v-model="url" name="url" />
     <div class="actions">
       <ion-button @click="onClose()">Cancel</ion-button>
-      <ion-button :disabled="!canSubmit" @click="onSubmit()">Submit</ion-button>
+      <ion-button :disabled="!canSubmit" @click="onSubmit()">{{ item ? 'Update' : 'Create' }}</ion-button>
       <ion-button v-if="canDelete" @click="onDelete()">Delete</ion-button>
     </div>
   </BasePage>
