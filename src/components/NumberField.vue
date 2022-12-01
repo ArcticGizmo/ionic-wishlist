@@ -9,16 +9,16 @@
 import { IonInput, IonLabel } from '@ionic/vue';
 
 defineProps({
-  name: { type: String, required: true },
+  name: { type: String },
   modelValue: { type: Number }
 });
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', event: string): void;
+  (e: 'update:modelValue', event: number): void;
 }>();
 
 const onChange = (e: any) => {
-  emits('update:modelValue', e.target.value as string);
+  emits('update:modelValue', parseFloat(e.target.value as string));
 };
 </script>
 

@@ -41,7 +41,11 @@ defineProps({
 }
 
 .rating {
+  text-align: center;
   position: absolute;
+  padding: 0.25rem;
+  background-color: orange;
+  min-width: 2rem;
   top: 0.25rem;
   left: 0.25rem;
 }

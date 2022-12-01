@@ -4,6 +4,8 @@
     <TextField v-model="name" name="name" />
     <TextField v-model="brand" name="brand" />
     <TextField v-model="url" name="Website" />
+    <NumberField v-model="price" name="price" />
+
     <NumberField v-model="rating" name="rating" />
     <div class="actions">
       <ion-button @click="onClose()">Cancel</ion-button>
@@ -31,9 +33,8 @@ const name = ref(props.item?.name || '');
 const brand = ref(props.item?.brand);
 const src = ref(props.item?.src);
 const url = ref(props.item?.url);
+const price = ref(props.item?.price || undefined);
 const rating = ref(props.item?.rating || 0);
-
-const price = ref(props.item?.price);
 
 const canSubmit = computed(() => name.value);
 

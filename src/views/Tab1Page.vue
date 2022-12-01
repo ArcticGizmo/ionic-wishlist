@@ -7,7 +7,7 @@
       <ion-icon :icon="add" @click="onAdd()" />
     </ion-fab-button>
     <div class="items">
-      <ItemCard v-for="(item, index) in sortedItems" :key="index" :item="item" @click="onEdit(item, index)" />
+      <ItemCard v-for="{ item, index } in sortedItems" :key="index" :item="item" @click="onEdit(item, index)" />
     </div>
   </BasePage>
 </template>
@@ -22,7 +22,7 @@ import { add, funnel } from 'ionicons/icons';
 import WishlistModal from '@/modals/WishlistModal.vue';
 import { Preferences } from '@capacitor/preferences';
 import SortFilterModal from '@/modals/SortFilterModal.vue';
-import { sortItems } from '@/code/filter';
+import { sortItems, SortedItem } from '@/code/filter';
 
 const KEY = 'MY_ITEMS';
 
@@ -30,11 +30,11 @@ const items = ref<WishlistItem[]>([]);
 
 const sortFilterConfig = ref<SortFilterConfig>({
   sortBy: 'rating',
-  sortAsc: true,
+  sortAsc: false,
   sortType: SortType.number
 });
 
-const sortedItems = computed<WishlistItem[]>(() => sortItems(items.value, sortFilterConfig.value));
+const sortedItems = computed<SortedItem<WishlistItem>[]>(() => sortItems(items.value, sortFilterConfig.value));
 
 onMounted(() => {
   loadItems();
