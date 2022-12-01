@@ -7,5 +7,20 @@ export interface WishlistItem {
   src?: string;
   price?: number;
   rating?: number;
-  [key: string]: any;
+}
+
+export enum SortType {
+  'number' = 'number',
+  'string' = 'string'
+}
+
+export interface SortFilterOption {
+  name: string;
+  type: SortType;
+}
+
+export interface SortFilterConfig {
+  sortBy: string;
+  sortAsc: boolean;
+  sortType: SortType;
 }

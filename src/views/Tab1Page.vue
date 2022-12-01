@@ -16,45 +16,48 @@
 import { computed, onMounted, ref } from 'vue';
 import ItemCard from '@/components/ItemCard.vue';
 import BasePage from './BasePage.vue';
-import { WishlistItem } from '@/types';
+import { WishlistItem, SortType, SortFilterConfig } from '@/types';
 import { IonFabButton, IonIcon, modalController } from '@ionic/vue';
 import { add, funnel } from 'ionicons/icons';
 import WishlistModal from '@/modals/WishlistModal.vue';
 import { Preferences } from '@capacitor/preferences';
-
-enum SortType {
-  'number',
-  'string'
-}
+import SortFilterModal from '@/modals/SortFilterModal.vue';
+import { sortItems } from '@/code/filter';
 
 const KEY = 'MY_ITEMS';
 
 const items = ref<WishlistItem[]>([]);
 
-const sortBy = ref('rating');
-const sortAsc = ref(true);
-const sortType = ref<SortType>(SortType.number);
-
-const sortedItems = computed(() => {
-  const arr = items.value.slice();
-  const key = sortBy.value;
-  const asc = sortAsc.value;
-  if (sortType.value === SortType.number) {
-    if (asc) {
-      return arr.sort((a, b) => (a[key] || 0) - (b[key] || 0));
-    }
-    return arr.sort((b, a) => (a[key] || 0) - (b[key] || 0));
-  }
-
-  return arr.sort((a, b) => a[key].localeCompare(b[key]));
+const sortFilterConfig = ref<SortFilterConfig>({
+  sortBy: 'rating',
+  sortAsc: true,
+  sortType: SortType.number
 });
+
+const sortedItems = computed<WishlistItem[]>(() => sortItems(items.value, sortFilterConfig.value));
 
 onMounted(() => {
   loadItems();
 });
 
-const onFilter = () => {
-  sortAsc.value = !sortAsc.value;
+const onFilter = async () => {
+  const modal = await modalController.create({
+    component: SortFilterModal,
+    componentProps: {
+      options: [
+        { name: 'rating', type: SortType.number },
+        { name: 'price', type: SortType.number },
+        { name: 'name', type: SortType.string },
+        { name: 'brand', type: SortType.string }
+      ],
+      config: sortFilterConfig.value
+    }
+  });
+  await modal.present();
+  const resp = await modal.onDidDismiss<SortFilterConfig>();
+  if (resp.data) {
+    sortFilterConfig.value = resp.data;
+  }
 };
 
 const saveItems = async () => {
