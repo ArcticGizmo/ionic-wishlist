@@ -1,3 +1,8 @@
+export interface Wishlist {
+  name: string;
+  items: WishlistItem[];
+}
+
 export interface WishlistItem {
   name: string;
   url?: string;
