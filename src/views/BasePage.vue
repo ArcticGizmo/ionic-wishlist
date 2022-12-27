@@ -2,7 +2,9 @@
   <ion-page>
     <ion-header v-if="!hideHeader">
       <ion-toolbar>
-        <ion-title>{{ title }}</ion-title>
+        <slot name="header">
+          <ion-title>{{ title }}</ion-title>
+        </slot>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -21,6 +23,7 @@ defineProps({
   hideHeader: { type: Boolean, default: false }
 });
 </script>
+
 <style scoped>
 ion-title {
   text-align: center;
@@ -28,6 +31,7 @@ ion-title {
 
 .page-content {
   height: 100%;
+  width: 100%;
   padding: 2rem;
 }
 </style>

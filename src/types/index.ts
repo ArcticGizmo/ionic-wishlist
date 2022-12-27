@@ -1,9 +1,11 @@
 export interface Wishlist {
+  id: string;
   name: string;
   items: WishlistItem[];
 }
 
 export interface WishlistItem {
+  id: string;
   name: string;
   url?: string;
   brand?: string;

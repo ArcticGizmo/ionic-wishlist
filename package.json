@@ -28,12 +28,14 @@
     "core-js": "^3.6.5",
     "ionicons": "^6.0.3",
     "pinch-zoom-js": "^2.3.5",
+    "uuid": "^9.0.0",
     "vue": "^3.2.21",
     "vue-router": "^4.0.12"
   },
   "devDependencies": {
     "@capacitor/cli": "4.4.0",
     "@types/jest": "^27.1.4",
+    "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "@vue/cli-plugin-babel": "~5.0.8",

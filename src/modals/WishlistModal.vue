@@ -9,8 +9,8 @@
     <NumberField v-model="rating" name="rating" />
     <div class="actions">
       <ion-button @click="onClose()">Cancel</ion-button>
-      <ion-button :disabled="!canSubmit" @click="onSubmit()">{{ item ? 'Update' : 'Create' }}</ion-button>
       <ion-button v-if="canDelete" @click="onDelete()">Delete</ion-button>
+      <ion-button :disabled="!canSubmit" @click="onSubmit()">{{ item ? 'Update' : 'Create' }}</ion-button>
     </div>
   </BasePage>
 </template>
@@ -19,7 +19,7 @@
 import { PropType, ref, computed } from 'vue';
 import { WishlistItem } from '@/types';
 import BasePage from '@/views/BasePage.vue';
-import { modalController, IonButton } from '@ionic/vue';
+import { modalController, IonButton, alertController, AlertOptions } from '@ionic/vue';
 import TextField from '@/components/TextField.vue';
 import NumberField from '@/components/NumberField.vue';
 import PictureField from '@/components/PictureField.vue';
@@ -44,13 +44,35 @@ const onSubmit = () => {
   modalController.dismiss({
     name: name.value,
     brand: brand.value,
+    url: url.value,
     src: src.value,
     price: price.value,
     rating: rating.value
   });
 };
-const onDelete = () => {
-  modalController.dismiss(undefined, 'destruction');
+const onDelete = async () => {
+  const opts: AlertOptions = {
+    header: `Delete '${props.item?.name}'?`,
+    buttons: [
+      {
+        id: 'yes',
+        text: 'yes',
+        role: 'destructive'
+      },
+      {
+        id: 'no',
+        text: 'no',
+        role: 'cancel'
+      }
+    ]
+  };
+  const alert = await alertController.create(opts);
+  await alert.present();
+  const resp = await alert.onDidDismiss();
+
+  if (resp.role === 'destructive') {
+    modalController.dismiss(undefined, 'destructive');
+  }
 };
 </script>
 
