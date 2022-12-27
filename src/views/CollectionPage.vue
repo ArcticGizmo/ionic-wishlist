@@ -166,6 +166,7 @@ const onEdit = async (item: WishlistItem) => {
 
 <style scoped>
 .items {
+  padding-top: 1rem;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
